@@ -1,16 +1,19 @@
 <template>
-    <div class="login">
-        <h2>登录</h2>
-        <form @submit.prevent="handleLogin">
+    <div class="registration">
+        <h2>注册</h2>
+        <form @submit.prevent="handleRegistration">
             <label for="username">用户名:</label>
             <input type="text" id="username" v-model="userData.username" required>
+
+            <!-- <label for="email">邮箱:</label>
+            <input type="email" id="email" v-model="userData.email" required> -->
 
             <label for="password">密码:</label>
             <input type="password" id="password" v-model="userData.password" required>
 
-            <button type="submit">登录</button>
+            <button type="submit">注册</button>
         </form>
-        <p v-if="showMessage">{{ responseMessage }}</p>
+        <p v-if="showMessage">{{ responseMessage }}}</p>
     </div>
 </template>
 
@@ -38,20 +41,17 @@ export default {
         };
     },
     methods: {
-        async handleLogin() {
-            const response = await this.$axios.post('/user/login', this.userData);
-            Cookies.set('token', response.data.data);
-            Cookies.set('username', this.userData.username);
+        async handleRegistration() {
+            const response = await this.$axios.post('/user/register', this.userData);
             this.responseMessage = response.data.message;
             this.showMessage = true;
-            location.reload();
         },
     },
 };
 </script>
 
 <style>
-.login {
+.registration {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
