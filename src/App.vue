@@ -14,6 +14,9 @@
           <el-menu-item v-if="!hasLogin" index="/login">登录</el-menu-item>
           <el-menu-item v-if="!hasLogin" index="/register">注册</el-menu-item>
           <el-menu-item v-if="hasLogin" index="/userInfo">用户信息</el-menu-item>
+          <el-divider></el-divider>
+          <el-menu-item v-if="isAdmin" index="/userManage">管理员：用户管理</el-menu-item>
+          <el-menu-item v-if="isAdmin" index="/podManage">管理员：pod管理</el-menu-item>
 
         </el-menu>
       </el-aside>
@@ -34,25 +37,28 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie';
 
 export default {
   created() {
     // 从 Cookie 中读取用户名和 Token
-    const username = Cookies.get('username');
-    const token = Cookies.get('token');
+    this.username = this.$cookies.get('username');
+    this.token = this.$cookies.get('token');
 
     // 判断用户名和 Token 是否存在，若存在则表示用户已登录
-    if (username && token) {
+    if (this.username && this.token) {
       this.hasLogin = true;
     } else {
       this.hasLogin = false;
     }
+    this.getUserInfo()
   },
   data() {
     return {
       activeMenu: "/index", // 默认选中菜单
-      hasLogin: false
+      hasLogin: false,
+      isAdmin: false,
+      username: '',
+      token: ''
     };
   },
   methods: {
@@ -61,6 +67,12 @@ export default {
       this.$router.push(index)
       // 根据index进行相关处理，比如跳转到相应的页面
     },
+    getUserInfo() {
+      this.$axios.get(`/user/getUserDTO/${this.username}`).then(response => {
+        this.isAdmin = response.data.data.isAdmin
+      })
+
+    }
   },
 };
 </script>

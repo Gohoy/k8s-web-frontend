@@ -12,15 +12,24 @@
 
             <el-table-column label="操作">
                 <template #default="{ row }">
-                    <el-button v-if="row.status === 'Running'" type="danger" size="small" @click="handleClose(row)">
-                        关闭
-                    </el-button>
-                    <el-button v-else type="success" size="small" @click="handleOpen(row)">
-                        开启
-                    </el-button>
-                    <el-button type="danger" size="small" @click="handleDelete(row)">
-                        删除
-                    </el-button>
+                    <el-popconfirm v-if="row.status" confirm-button-text="Yes" cancel-button-text="No"
+                        title="确定关闭这个pod吗？确保您已经保存了重要信息" @confirm="confirmShutDown(row)">
+                        <template #reference>
+                            <el-button type="primary">关闭</el-button>
+                        </template>
+                    </el-popconfirm>
+                    <el-popconfirm v-else confirm-button-text="Yes" cancel-button-text="No" title="确定关闭这个pod吗？确保您已经保存了重要信息"
+                        @confirm="confirmShutDown(row)">
+                        <template #reference>
+                            <el-button type="primary">关闭</el-button>
+                        </template>
+                    </el-popconfirm>
+                    <el-popconfirm confirm-button-text="Yes" cancel-button-text="No" title="确定删除这个pod吗？确保您已经保存了重要信息"
+                        @confirm="confirmDelete(row)">
+                        <template #reference>
+                            <el-button type="warning">删除</el-button>
+                        </template>
+                    </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
@@ -39,25 +48,16 @@ export default {
     },
     methods: {
         getPodData() {
-            this.$axios.get(`/pod/selectPodByPrefix/${this.username}`).then((response) => {
+            this.$axios.get("/admin/pod/getAllPods").then((response) => {
                 this.podData = response.data;
             });
         },
-        handleClose(row) {
-            // 处理关闭按钮点击事件
-            // row是当前行的数据
-            // 在这里可以发送请求关闭对应的pod
+        confirmShutDown(row) {
+            console.log(row)
         },
-        handleOpen(row) {
-            // 处理开启按钮点击事件
-            // row是当前行的数据
-            // 在这里可以发送请求开启对应的pod
-        },
-        handleDelete(row) {
-            // 处理删除按钮点击事件
-            // row是当前行的数据
-            // 在这里可以发送请求删除对应的pod
-        },
+        confirmDelete(row) {
+            console.log(row)
+        }
     },
     created() {
         this.username = this.$cookies.get('username');
