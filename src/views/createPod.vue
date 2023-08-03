@@ -6,8 +6,11 @@
                 <button @click="handleContainerApplication()">Container 申请</button>
                 <button @click="handleVMApplication()">虚拟机申请</button>
             </div>
-            <p>当前可用的 Container 数量：{{ this.userdata.ctrMax - this.userdata.ctrOccupied }}</p>
-            <p>当前可用的虚拟机数量：{{ this.userdata.vmMax - this.userdata.vmOccupied }}</p>
+            <div v-if="userdata.ctrMax">
+                <p>当前可用的 Container 数量：{{ this.userdata.ctrMax - this.userdata.ctrOccupied }}</p>
+                <p>当前可用的虚拟机数量：{{ this.userdata.vmMax - this.userdata.vmOccupied }}</p>
+            </div>
+
         </div>
     </div>
 </template>
@@ -21,8 +24,9 @@ export default {
         if (this.username == '') {
             ElMessage("请先登录")
             this.$router.push("/login");
+        } else {
+            this.getUserInfo()
         }
-        this.getUserInfo()
     },
     data() {
         return {
@@ -34,7 +38,21 @@ export default {
         getUserInfo() {
             this.$axios.get(`/user/getUserDTO/${this.username}`).then(response => {
                 this.userdata = response.data.data
-            })
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    // 如果接收到401响应，说明用户未授权，提示用户重新登录
+                    this.$message.error('您的登录已过期，请重新登录');
+                    this.logout();
+                }
+            });
+        },
+        logout() {
+            // 清除 cookies 中的 token 和 username
+            this.$cookies.remove('token');
+            this.$cookies.remove('username');
+
+            // 重定向到登录页面
+            this.$router.push('/login');
         },
         handleContainerApplication() {
             // 处理 Container 申请逻辑

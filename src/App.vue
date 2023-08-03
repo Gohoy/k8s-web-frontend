@@ -9,14 +9,15 @@
             <span>Pod</span>
           </template>
           <el-menu-item index="/index">主页</el-menu-item>
-          <el-menu-item index="/createPod">pod申请</el-menu-item>
-          <el-menu-item index="/managePod">pod管理</el-menu-item>
+          <el-menu-item v-if="hasLogin" index="/createPod">pod申请</el-menu-item>
+          <el-menu-item v-if="hasLogin" index="/managePod">pod管理</el-menu-item>
           <el-menu-item v-if="!hasLogin" index="/login">登录</el-menu-item>
           <el-menu-item v-if="!hasLogin" index="/register">注册</el-menu-item>
           <el-menu-item v-if="hasLogin" index="/userInfo">用户信息</el-menu-item>
           <el-divider></el-divider>
           <el-menu-item v-if="isAdmin" index="/userManage">管理员：用户管理</el-menu-item>
-          <el-menu-item v-if="isAdmin" index="/podManage">管理员：pod管理</el-menu-item>
+          <el-menu-item v-if="isAdmin" index="/ctrManage">管理员：ctr管理</el-menu-item>
+          <el-menu-item v-if="isAdmin" index="/vmManage">管理员：vm管理</el-menu-item>
 
         </el-menu>
       </el-aside>
@@ -45,7 +46,7 @@ export default {
     this.token = this.$cookies.get('token');
 
     // 判断用户名和 Token 是否存在，若存在则表示用户已登录
-    if (this.username && this.token) {
+    if (this.username != null && this.token) {
       this.hasLogin = true;
     } else {
       this.hasLogin = false;
@@ -68,6 +69,9 @@ export default {
       // 根据index进行相关处理，比如跳转到相应的页面
     },
     getUserInfo() {
+      if (!this.username) {
+        return;
+      }
       this.$axios.get(`/user/getUserDTO/${this.username}`).then(response => {
         this.isAdmin = response.data.data.isAdmin
       })

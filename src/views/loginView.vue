@@ -10,11 +10,11 @@
 
             <button type="submit">登录</button>
         </form>
-        <p v-if="showMessage">{{ responseMessage }}</p>
     </div>
 </template>
 
 <script>
+import { ElMessage } from 'element-plus';
 import Cookies from 'js-cookie';
 export default {
     created() {
@@ -33,18 +33,22 @@ export default {
                 username: "",
                 password: ""
             },
-            showMessage: false,
             responseMessage: "",
         };
     },
     methods: {
         async handleLogin() {
-            const response = await this.$axios.post('/user/login', this.userData);
-            Cookies.set('token', response.data.data);
-            Cookies.set('username', this.userData.username);
-            this.responseMessage = response.data.message;
-            this.showMessage = true;
-            location.reload();
+            const response = await this.$axios.post('/user/login', this.userData).then(response => {
+                if (response.data.code == "200") {
+                    Cookies.set('token', response.data.data);
+                    Cookies.set('username', this.userData.username);
+                    ElMessage.info(response.data.message)
+                    location.reload();
+                } else {
+                    ElMessage.error(response.data.message)
+                }
+            })
+
         },
     },
 };
