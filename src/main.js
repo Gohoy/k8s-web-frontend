@@ -5,7 +5,8 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import axios from 'axios'
 import Cookies from 'js-cookie';
-axios.defaults.baseURL = "http://localhost:8080/"
+// axios.defaults.baseURL = "http://10.168.59.90:8088/"
+axios.defaults.baseURL = "http://localhost:8088/"
 
 axios.interceptors.request.use((config) => {
     const token = Cookies.get('token');

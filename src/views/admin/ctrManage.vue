@@ -18,18 +18,7 @@
 
             <el-table-column label="操作">
                 <template #default="{ row }">
-                    <el-popconfirm v-if="row.status" confirm-button-text="Yes" cancel-button-text="No"
-                        title="确定关闭这个pod吗？确保您已经保存了重要信息" @confirm="confirmShutDown(row)">
-                        <template #reference>
-                            <el-button type="primary">关闭</el-button>
-                        </template>
-                    </el-popconfirm>
-                    <el-popconfirm v-else confirm-button-text="Yes" cancel-button-text="No" title="确定关闭这个pod吗？确保您已经保存了重要信息"
-                        @confirm="confirmShutDown(row)">
-                        <template #reference>
-                            <el-button type="primary">关闭</el-button>
-                        </template>
-                    </el-popconfirm>
+
                     <el-popconfirm confirm-button-text="Yes" cancel-button-text="No" title="确定删除这个pod吗？确保您已经保存了重要信息"
                         @confirm="confirmDelete(row)">
                         <template #reference>
@@ -91,7 +80,7 @@ export default {
         },
         getPodData() {
             this.$axios.get("/admin/pod/getAllPods/ctr").then((response) => {
-                this.podData = response.data;
+                this.podData = response.data.data;
             });
         },
         confirmShutDown(row) {

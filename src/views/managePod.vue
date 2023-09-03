@@ -14,22 +14,12 @@
 
             <el-table-column label="操作">
                 <template #default="{ row }">
-                    <el-popconfirm v-if="row.status" confirm-button-text="Yes" cancel-button-text="No"
-                        title="确定关闭这个pod吗？确保您已经保存了重要信息" @confirm="confirmShutDown(row)">
+                    <!-- <el-popconfirm v-if="row.status === 'Running'" confirm-button-text="Yes" cancel-button-text="No"
+                        title="一次申请延长使用七天，确定申请？" @confirm="confirmApply(row)">
                         <template #reference>
-                            <el-button type="primary">关闭</el-button>
+                            <el-button type="primary">延长使用时间</el-button>
                         </template>
-                    </el-popconfirm>
-                    <el-button disabled v-else v-if="row.status === 'Pending'" type="success" size="small"
-                        @click="handleOpen(row)">
-                        启动中
-                    </el-button>
-                    <el-popconfirm v-else confirm-button-text="Yes" cancel-button-text="No" title="确定关闭这个pod吗？确保您已经保存了重要信息"
-                        @confirm="confirmShutDown(row)">
-                        <template #reference>
-                            <el-button type="primary">关闭</el-button>
-                        </template>
-                    </el-popconfirm>
+                    </el-popconfirm> -->
                     <el-popconfirm confirm-button-text="Yes" cancel-button-text="No" title="确定删除这个pod吗？确保您已经保存了重要信息"
                         @confirm="confirmDelete(row)">
                         <template #reference>
@@ -55,7 +45,7 @@ export default {
     methods: {
         getPodData() {
             this.$axios.get(`/pod/selectPodByUserName/${this.username}`).then((response) => {
-                this.podData = response.data;
+                this.podData = response.data.data;
             }).catch(error => {
                 if (error.response && error.response.status === 401) {
                     // 如果接收到401响应，说明用户未授权，提示用户重新登录
@@ -72,17 +62,10 @@ export default {
             // 重定向到登录页面
             this.$router.push('/login');
         },
+        confirmApply(row) {
+            console.log(row.name)
+        },
 
-        handleClose(row) {
-            // 处理关闭按钮点击事件
-            // row是当前行的数据
-            // 在这里可以发送请求关闭对应的pod
-        },
-        handleOpen(row) {
-            // 处理开启按钮点击事件
-            // row是当前行的数据
-            // 在这里可以发送请求开启对应的pod
-        },
         confirmDelete(row) {
             // 处理删除按钮点击事件
             // row是当前行的数据

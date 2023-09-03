@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "serve": "vue-cli-service serve --port 8089",
+    "build": "vue-cli-service build --port 8089"
   },
   "dependencies": {
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
     "element-plus": "^2.3.8",
+    "html-loader": "^4.2.0",
     "js-cookie": "^3.0.5",
     "markdown-it": "^13.0.1",
+    "markdown-loader": "^8.0.0",
+    "marked": "^7.0.4",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
   },

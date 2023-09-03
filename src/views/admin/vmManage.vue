@@ -1,11 +1,12 @@
 <template>
     <div class="container">
         <div class="default-config">
-            <p>默认CPU: {{ defaultConfig.cpuValue }}</p>
+            <!-- <p>默认CPU: {{ defaultConfig.cpuValue }}</p>
             <p>默认内存: {{ defaultConfig.memoryValue }}</p>
             <p>默认可用时间: {{ defaultConfig.timeOfLife }}</p>
             <p>目前端口分配到: {{ defaultConfig.port }}</p>
-            <el-button type="primary" @click="showEditDefaultConfigDialog">修改默认配置</el-button>
+            <el-button type="primary" @click="showEditDefaultConfigDialog">修改默认配置</el-button> -->
+            vm默认配置文件请直接从主机脚本中修改
         </div>
         <el-table :data="podData" style="width: 100%">
             <el-table-column prop="name" label="名称"></el-table-column>
@@ -18,18 +19,7 @@
 
             <el-table-column label="操作">
                 <template #default="{ row }">
-                    <el-popconfirm v-if="row.status" confirm-button-text="Yes" cancel-button-text="No"
-                        title="确定关闭这个pod吗？确保您已经保存了重要信息" @confirm="confirmShutDown(row)">
-                        <template #reference>
-                            <el-button type="primary">关闭</el-button>
-                        </template>
-                    </el-popconfirm>
-                    <el-popconfirm v-else confirm-button-text="Yes" cancel-button-text="No" title="确定关闭这个pod吗？确保您已经保存了重要信息"
-                        @confirm="confirmShutDown(row)">
-                        <template #reference>
-                            <el-button type="primary">关闭</el-button>
-                        </template>
-                    </el-popconfirm>
+
                     <el-popconfirm confirm-button-text="Yes" cancel-button-text="No" title="确定删除这个pod吗？确保您已经保存了重要信息"
                         @confirm="confirmDelete(row)">
                         <template #reference>
@@ -91,7 +81,7 @@ export default {
         },
         getPodData() {
             this.$axios.get("/admin/pod/getAllPods/vm").then((response) => {
-                this.podData = response.data;
+                this.podData = response.data.data;
             });
         },
         confirmShutDown(row) {
@@ -144,7 +134,7 @@ export default {
             this.$router.push('/login');
         }
         this.getPodData();
-        this.getDefaultConfig();
+        // this.getDefaultConfig();
     },
 };
 </script>

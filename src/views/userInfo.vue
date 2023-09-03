@@ -18,7 +18,7 @@
 
 <script>
 export default {
-    created() {
+    mounted() {
         this.username = this.$cookies.get("username");
         if (this.username === '') {
             this.$router.push("/login");
@@ -50,11 +50,11 @@ export default {
             this.$cookies.remove('username');
 
             // 重定向到登录页面
-            this.$router.push('/login');
-
-            location.reload()
-
-            this.$router.push('/login');
+            this.$router.push('/login').then(() => {
+                // 在路由切换后执行一些操作，例如清除状态
+                // 这里可以根据您的需要进行适当的处理
+                location.reload()
+            });
         }
     }
 };
